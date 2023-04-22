@@ -15,24 +15,18 @@ namespace CryptoCurrencies.CoinGecko.Services
 
         public async Task<List<Coin>> GetCoinMarkets(string vsCurrency)
         {
-            return await GetCoinMarkets(vsCurrency, new string[] { }, null, null, null, false, null, null);
-        }
-
-        public async Task<List<Coin>> GetCoinMarkets(string vsCurrency, string[] ids, string order, int? perPage,
-        int? page, bool sparkline, string priceChangePercentage, string category)
-        {
             return await GetAsync<List<Coin>>(QueryStringService.AppendQueryString(CoinsEndPoints.CoinMarkets,
                 new Dictionary<string, object>
                 {
-                {"vs_currency", vsCurrency},
-                {"ids", string.Join(",", ids)},
-                {"order",order},
-                {"per_page", perPage},
-                {"page", page},
-                {"sparkline", sparkline},
-                {"price_change_percentage", priceChangePercentage},
-                {"category",category}
+                    { "vs_currency", vsCurrency },
+                    { "order", "market_cap_desc" },
+                    { "per_page", 10 },
+                    { "page", 1 },
+                    { "sparkline", true },
+                    { "locale", "en" }
                 }));
         }
+
+        
     }
 }

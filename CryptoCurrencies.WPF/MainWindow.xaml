@@ -4,9 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CryptoCurrencies.WPF"
+        xmlns:views="clr-namespace:CryptoCurrencies.WPF.Views"
+        xmlns:VM="clr-namespace:CryptoCurrencies.WPF.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{x:Type VM:BaseViewModel}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <ContentControl Content="{Binding Navigation.CurrentView}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type VM:HomeViewModel}">
+                    <views:HomeView />
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
     </Grid>
 </Window>

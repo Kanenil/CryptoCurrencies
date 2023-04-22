@@ -10,7 +10,5 @@ namespace CryptoCurrencies.CoinGecko.Interfaces
     public interface ICoinsService
     {
         Task<List<Coin>> GetCoinMarkets(string vsCurrency);
-        Task<List<Coin>> GetCoinMarkets(string vsCurrency, string[] ids, string order, int? perPage, int? page,
-        bool sparkline, string priceChangePercentage, string category);
     }
 }
