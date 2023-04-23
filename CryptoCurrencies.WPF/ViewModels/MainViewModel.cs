@@ -17,7 +17,7 @@ namespace CryptoCurrencies.WPF.ViewModels
     {
         public MainViewModel(INavigationService navigationService) : base(navigationService)
         {
-            navigationService.NavigateTo<HomeViewModel>();
+            Navigation.NavigateTo<HomeViewModel>();
         }
     }
 }

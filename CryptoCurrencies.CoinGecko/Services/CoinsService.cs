@@ -13,9 +13,9 @@ namespace CryptoCurrencies.CoinGecko.Services
     {
         public CoinsService(HttpClient httpClient) : base(httpClient) {}
 
-        public async Task<List<Coin>> GetCoinMarkets(string vsCurrency)
+        public async Task<List<MainCoin>> GetCoinMarkets(string vsCurrency)
         {
-            return await GetAsync<List<Coin>>(QueryStringService.AppendQueryString(CoinsEndPoints.CoinMarkets,
+            return await GetAsync<List<MainCoin>>(QueryStringService.AppendQueryString(CoinsEndPoints.CoinMarkets,
                 new Dictionary<string, object>
                 {
                     { "vs_currency", vsCurrency },
@@ -23,7 +23,8 @@ namespace CryptoCurrencies.CoinGecko.Services
                     { "per_page", 10 },
                     { "page", 1 },
                     { "sparkline", true },
-                    { "locale", "en" }
+                    { "locale", "en" },
+                    { "price_change_percentage", "24h,7d" },
                 }));
         }
 

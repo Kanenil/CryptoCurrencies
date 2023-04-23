@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CryptoCurrencies.CoinGecko.Models
 {
-    public class Coin
+    public class MainCoin
     {
         [JsonPropertyName("id")]
         public string Id { get; set; }
@@ -27,16 +27,13 @@ namespace CryptoCurrencies.CoinGecko.Models
         [JsonPropertyName("market_cap")]
         public decimal? MarketCap { get; set; }
 
-        [JsonPropertyName("fully_diluted_valuation")]
-        public decimal? FullyDilutedMarketCap { get; set; }
+        [JsonPropertyName("market_cap_rank")]
+        public long? MarketCapRank { get; set; }
 
-        [JsonPropertyName("total_volume")]
-        public decimal? TotalVolume { get; set; }
+        [JsonPropertyName("price_change_percentage_24h_in_currency")]
+        public decimal? PriceChangePercentage24HInCurrency { get; set; }
 
-        [JsonPropertyName("ath_change_percentage")]
-        public decimal? AthChangePercentage { get; set; }
-
-        [JsonPropertyName("sparkline_in_7d")]
-        public SparklineIn7D SparklineIn7D { get; set; }
+        [JsonPropertyName("price_change_percentage_7d_in_currency")]
+        public decimal? PriceChangePercentage7DInCurrency { get; set; }
     }
 }

@@ -18,7 +18,8 @@ namespace CryptoCurrencies.CoinGecko.Services
 
         public async Task<T> GetAsync<T>(Uri resourceUri)
         {
-            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, resourceUri));
+            //var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, resourceUri));
+            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"http://api.scraperapi.com?api_key=230fa5ed96ed6cb1b35ad802d0282018&url={resourceUri.AbsoluteUri}"));
 
             response.EnsureSuccessStatusCode();
 

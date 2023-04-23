@@ -6,6 +6,8 @@ using CryptoCurrencies.WPF.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.DirectoryServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +26,10 @@ namespace CryptoCurrencies.WPF.ViewModels
         }
 
         [ObservableProperty]
-        private ObservableCollection<Coin> _coins;
+        private string _culture = "en-US";
+
+        [ObservableProperty]
+        private ObservableCollection<MainCoin> _coins;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -42,14 +47,15 @@ namespace CryptoCurrencies.WPF.ViewModels
         public IAsyncRelayCommand DismissErrorCommand { get; }
         private async Task LoadCoinsAsync()
         {
+            IsLoading = true;
+            HasError = false;
+
             try
             {
-                IsLoading = true;
-
                 Title = "Loading Data";
                 Description = "Please wait, we are loading coin data";
 
-                Coins = new ObservableCollection<Coin>(await _coinsService.GetCoinMarkets("usd"));
+                Coins = new ObservableCollection<MainCoin>(await _coinsService.GetCoinMarkets("usd"));
 
                 IsLoading = false;
             }
