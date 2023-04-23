@@ -17,9 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\CryptoCurrencies.CoinGecko\CryptoCurrencies.CoinGecko.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
 
 </Project>
