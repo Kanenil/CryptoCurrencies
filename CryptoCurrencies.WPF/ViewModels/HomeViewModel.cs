@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CryptoCurrencies.CoinGecko.Interfaces;
 using CryptoCurrencies.CoinGecko.Models;
 using CryptoCurrencies.WPF.Interfaces;
+using CryptoCurrencies.WPF.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -66,6 +67,12 @@ namespace CryptoCurrencies.WPF.ViewModels
 
                 HasError = true;
             }
+        }
+
+        [RelayCommand]
+        private void NavigateToDetails(MainCoin? coin)
+        {
+            Navigation.NavigateTo<DetailViewModel>();
         }
     }
 }
