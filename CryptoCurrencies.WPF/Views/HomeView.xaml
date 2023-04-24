@@ -56,7 +56,7 @@
                              Background="{StaticResource SecundaryBackgroundColor}"
                              Tag="Search..."
                              HorizontalAlignment="Right"
-                             Text="{Binding Search}"
+                             Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Padding="10 4 0 3"
                              Name="Search"
                              Style="{StaticResource PrimaryTextBoxStyle}"
