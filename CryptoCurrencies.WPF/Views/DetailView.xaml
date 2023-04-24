@@ -19,11 +19,13 @@
         <converters:PercentageToTextConverter x:Key="PercentageToTextConverter"/>
         <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
         <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
+        <converters:SequenceNumberConverter x:Key="SequenceNumberConverter"/>
     </UserControl.Resources>
     <Behaviors:Interaction.Triggers>
         <Behaviors:EventTrigger EventName="Loaded">
             <Behaviors:InvokeCommandAction Command="{Binding LoadCoinCommand}"/>
             <Behaviors:InvokeCommandAction Command="{Binding LoadChartCommand}"/>
+            <Behaviors:InvokeCommandAction Command="{Binding LoadMarketsCommand}"/>
         </Behaviors:EventTrigger>
     </Behaviors:Interaction.Triggers>
     <Grid Background="{StaticResource PrimaryBackgroundColor}">
@@ -121,18 +123,185 @@
 
                 <Grid Grid.Row="2" 
                       Grid.ColumnSpan="2"
-                      VerticalAlignment="Top">
+                      VerticalAlignment="Top"
+                      Margin="10">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
+                    <components:Loader Panel.ZIndex="1"
+                                       Grid.RowSpan="3"
+                               IsLoading="{Binding IsLoadingMarkets}"
+                               HasError="{Binding HasErrorMarkets}"
+                               Description="{Binding DescriptionMarkets}"
+                               Title="{Binding TitleMarkets}"
+                               DismissError="{Binding DismissMarketsErrorCommand}"/>
+                    
                     <TextBlock FontSize="22"
+                               Margin="0 0 0 10"
                                FontWeight="SemiBold"
                                Foreground="#FFFFFF">
                         <Run Text="{Binding Coin.Name }" />
                         Markets
                     </TextBlock>
+
+                    <Grid Grid.Row="1"
+                          Background="#1f1c1c">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Padding="10 12"
+                   HorizontalAlignment="Left"
+                   Text="#"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"/>
+                        <TextBlock Grid.Column="1"
+                   Padding="10 12"
+                   Text="Exchange"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"/>
+                        <TextBlock Grid.Column="2"
+                   Padding="10 12"
+                   Text="Pair"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"
+                                   />
+                        <TextBlock Grid.Column="3"
+                   Padding="10 12"
+                   Text="Price"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"
+                   HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="4"
+                   Padding="10 12"
+                   Text="24h Volume"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"
+                   HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="5"
+                   Padding="10 12"
+                   Text="Trust Score"
+                   FontWeight="Bold"
+                   Foreground="#FFFFFF"
+                   HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <Separator Grid.Row="2"
+                            Background="#2f2f2f"/>
+
+                    <ItemsControl Grid.Row="3"
+                      ItemsSource="{Binding Markets}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Cursor="Hand">
+                                    <Behaviors:Interaction.Triggers>
+                                        <Behaviors:EventTrigger EventName="PreviewMouseUp">
+                                            <Behaviors:InvokeCommandAction Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                               CommandParameter="{Binding TradeUrl}"/>
+                                        </Behaviors:EventTrigger>
+                                    </Behaviors:Interaction.Triggers>
+
+                                    <Grid.Style>
+                                        <Style TargetType="{x:Type Grid}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Trigger.Setters>
+                                                        <Setter Property="Background" Value="#5c5454"/>
+                                                    </Trigger.Setters>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Padding="10 12"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Left"
+                   Foreground="#b3b9c5">
+                                       <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource SequenceNumberConverter}" ConverterParameter="0">
+                                                <Binding Path="."/>
+                                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text> 
+                                    </TextBlock>
+
+                                    <WrapPanel Grid.Column="1" 
+                   VerticalAlignment="Center">
+                                        <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                   Height="24" Width="24"
+                   Source="{Binding Market.Logo}"/>
+                                        <TextBlock Margin="6 0 6 1" 
+                       VerticalAlignment="Center" 
+                       FontSize="13.5" 
+                       FontWeight="SemiBold"
+                       Text="{Binding Market.Name}" 
+                       Foreground="#FFFFFF"/>
+                                    </WrapPanel>
+
+                                    <TextBlock Padding="10 12"
+                                               FontSize="13.25"
+                                               Grid.Column="2"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Foreground="#b3b9c5">
+                                        <Run Text="{Binding Base, Converter={StaticResource ToUpperConverter}}"/>/<Run Text="{Binding Target, Converter={StaticResource ToUpperConverter}}"/>
+                                    </TextBlock>
+
+                                    <TextBlock Grid.Column="3"
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Right"
+                   Foreground="#FFFFFF">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource DecimalToFullCurrencyConverter}">
+                                                <Binding Path="Last"/>
+                                                <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+
+                                    <TextBlock Grid.Column="4"
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Right"
+                   Foreground="#FFFFFF">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource DecimalToFullCurrencyConverter}">
+                                                <Binding Path="Volume"/>
+                                                <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+
+                                    <Ellipse Height="15"
+                                             Width="15"
+                                             Grid.Column="5"
+                                             HorizontalAlignment="Center"
+                                             Fill="{Binding TrustScore, StringFormat='#{0}'}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
                 </Grid>
 

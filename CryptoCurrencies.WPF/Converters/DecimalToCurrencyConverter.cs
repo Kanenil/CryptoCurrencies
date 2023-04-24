@@ -15,6 +15,8 @@ namespace CryptoCurrencies.WPF.Converters
         {
             if (values.Contains(null) || values.Contains(DependencyProperty.UnsetValue)) return string.Empty;
 
+            if ((decimal)values[0] == 0) return string.Empty;
+
             var cult = (string)values[1];
             var price = (decimal)values[0];
 

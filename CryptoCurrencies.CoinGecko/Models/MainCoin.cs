@@ -22,18 +22,18 @@ namespace CryptoCurrencies.CoinGecko.Models
         public Uri Image { get; set; }
 
         [JsonPropertyName("current_price")]
-        public decimal? CurrentPrice { get; set; }
+        public decimal CurrentPrice { get; set; }
 
         [JsonPropertyName("market_cap")]
-        public decimal? MarketCap { get; set; }
+        public decimal MarketCap { get; set; }
 
         [JsonPropertyName("market_cap_rank")]
-        public long? MarketCapRank { get; set; }
+        public long MarketCapRank { get; set; }
 
         [JsonPropertyName("price_change_percentage_24h_in_currency")]
-        public decimal? PriceChangePercentage24HInCurrency { get; set; }
+        public decimal PriceChangePercentage24HInCurrency { get; set; }
 
         [JsonPropertyName("price_change_percentage_7d_in_currency")]
-        public decimal? PriceChangePercentage7DInCurrency { get; set; }
+        public decimal PriceChangePercentage7DInCurrency { get; set; }
     }
 }

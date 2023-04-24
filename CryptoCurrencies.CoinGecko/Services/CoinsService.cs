@@ -76,5 +76,15 @@ namespace CryptoCurrencies.CoinGecko.Services
                 {"days", days},
             }));
         }
+
+        public async Task<MarketCoin> GetTickerByCoinId(string id, int? page)
+        {
+            return await GetAsync<MarketCoin>(QueryStringService.AppendQueryString(
+            CoinsEndPoints.TickersByCoinId(id), new Dictionary<string, object>
+            {
+                {"page", page},
+                {"include_exchange_logo", true},
+            }));
+        }
     }
 }

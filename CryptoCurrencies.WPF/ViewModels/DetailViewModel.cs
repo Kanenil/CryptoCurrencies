@@ -37,6 +37,8 @@ namespace CryptoCurrencies.WPF.ViewModels
             DismissErrorCommand = new AsyncRelayCommand(LoadCoinAsync);
             LoadChartCommand = new AsyncRelayCommand(LoadChartAsync);
             DismissChartErrorCommand = new AsyncRelayCommand(LoadChartAsync);
+            LoadMarketsCommand = new AsyncRelayCommand(LoadMarketsAsync);
+            DismissMarketsErrorCommand = new AsyncRelayCommand(LoadMarketsAsync);
         }
 
         [ObservableProperty]
@@ -67,7 +69,22 @@ namespace CryptoCurrencies.WPF.ViewModels
         private string _descriptionChart;
 
         [ObservableProperty]
+        private bool _isLoadingMarkets;
+
+        [ObservableProperty]
+        private bool _hasErrorMarkets;
+
+        [ObservableProperty]
+        private string _titleMarkets;
+
+        [ObservableProperty]
+        private string _descriptionMarkets;
+
+        [ObservableProperty]
         private DetailCoin _coin = new();
+
+        [ObservableProperty]
+        private ObservableCollection<TickerInfo> _markets;
 
         public Axis[] XAxes { get; set; } =
         {
@@ -210,11 +227,48 @@ namespace CryptoCurrencies.WPF.ViewModels
                 HasErrorChart = true;
             }
         }
+        public IAsyncRelayCommand LoadMarketsCommand { get; }
+        public IAsyncRelayCommand DismissMarketsErrorCommand { get; }
+        private async Task LoadMarketsAsync()
+        {
+            IsLoadingMarkets = true;
+            HasErrorMarkets = false;
+
+            try
+            {
+                TitleMarkets = "Loading Markets";
+                DescriptionMarkets = "Please wait, we are loading information";
+
+                var resp = await _coinsService.GetTickerByCoinId(_coinStore.SelectedCoin, 1);
+
+
+                Markets = new(resp.Tickers.Take(5));
+
+                IsLoadingMarkets = false;
+            }
+            catch (Exception)
+            {
+                TitleMarkets = "Too many requests";
+                DescriptionMarkets = "Please wait for the API to be available again";
+
+                HasErrorMarkets = true;
+            }
+        }
 
         [RelayCommand]
         private void MoveToHome()
         {
             Navigation.NavigateTo<HomeViewModel>();
+        }
+        [RelayCommand]
+        private void OpenUrl(string? url)
+        {
+            Process.Start(
+                new ProcessStartInfo(
+                    "cmd", $"/c start {url}"
+                )
+                { CreateNoWindow = true }
+            );
         }
     }
 }

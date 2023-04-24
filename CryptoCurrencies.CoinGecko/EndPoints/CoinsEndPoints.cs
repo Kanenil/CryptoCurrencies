@@ -11,5 +11,6 @@ namespace CryptoCurrencies.CoinGecko.EndPoints
         public static readonly string Coins = "coins";
         public static readonly string CoinMarkets = "coins/markets";
         public static string MarketChartByCoinId(string id) => BaseEndPoint.AddCoinsIdUrl(id) + "/market_chart";
+        public static string TickersByCoinId(string id) => BaseEndPoint.AddCoinsIdUrl(id) + "/tickers";
     }
 }
