@@ -17,7 +17,7 @@ namespace CryptoCurrencies.CoinGecko.Services
             using (var httpClient = new HttpClient())
             {
                 //$"http://api.scraperapi.com?api_key=230fa5ed96ed6cb1b35ad802d0282018&url={resourceUri.AbsoluteUri}"
-                using (var request = new HttpRequestMessage(new HttpMethod("GET"), resourceUri))
+                using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"http://api.scraperapi.com?api_key=230fa5ed96ed6cb1b35ad802d0282018&url={resourceUri.AbsoluteUri}"))
                 {
                     request.Headers.TryAddWithoutValidation("accept", "application/json");
                     request.Headers.Add("User-Agent", "Cryptocurrencies v0.0.1");

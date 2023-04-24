@@ -13,6 +13,7 @@ using System.DirectoryServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace CryptoCurrencies.WPF.ViewModels
 {
@@ -26,7 +27,6 @@ namespace CryptoCurrencies.WPF.ViewModels
             _coinStore = coinStore;
 
             LoadCoinsCommand = new AsyncRelayCommand(LoadCoinsAsync);
-            DismissErrorCommand = new AsyncRelayCommand(LoadCoinsAsync);
         }
 
         [ObservableProperty]
@@ -47,8 +47,13 @@ namespace CryptoCurrencies.WPF.ViewModels
         [ObservableProperty]
         private string _description;
 
+        [ObservableProperty]
+        private string _search;
+
+        [ObservableProperty]
+        private int _page = 1;
+
         public IAsyncRelayCommand LoadCoinsCommand { get; }
-        public IAsyncRelayCommand DismissErrorCommand { get; }
         private async Task LoadCoinsAsync()
         {
             IsLoading = true;
@@ -59,7 +64,10 @@ namespace CryptoCurrencies.WPF.ViewModels
                 Title = "Loading Data";
                 Description = "Please wait, we are loading coin data";
 
-                Coins = new ObservableCollection<MainCoin>(await _coinsService.GetCoinMarkets("usd"));
+                if(string.IsNullOrWhiteSpace(Search))
+                    Coins = new(await _coinsService.GetCoinMarkets("usd", Page));
+                else
+                    Coins = new(await _coinsService.GetCoinsBySearch("usd", Page, Search));
 
                 IsLoading = false;
             }
@@ -70,6 +78,12 @@ namespace CryptoCurrencies.WPF.ViewModels
 
                 HasError = true;
             }
+        }
+        [RelayCommand]
+        private void ChangePage(string change)
+        {
+            Page = Page + int.Parse(change);
+            Task.Run(LoadCoinsAsync);
         }
 
         [RelayCommand]

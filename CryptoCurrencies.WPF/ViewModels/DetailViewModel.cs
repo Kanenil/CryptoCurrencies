@@ -18,6 +18,8 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.WPF;
 using System.Diagnostics;
+using System.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace CryptoCurrencies.WPF.ViewModels
 {
@@ -71,8 +73,9 @@ namespace CryptoCurrencies.WPF.ViewModels
         {
             new Axis
             {
-                LabelsRotation = 15,
-                Labeler = value => value > 0? new DateTime((long)value).ToString("dd/MM/yyyy H:mm:ss"):"",
+                LabelsRotation = 90,
+                TextBrush = new SolidColorPaint(SkiaSharp.SKColor.Parse("#b3b9c5")),
+                Labeler = value => value > 0? new DateTime((long)value).ToString("t"):"",
                 UnitWidth = TimeSpan.FromMinutes(4).Ticks,
             }
         };
@@ -81,6 +84,7 @@ namespace CryptoCurrencies.WPF.ViewModels
         {
             new Axis
             {
+                TextBrush = new SolidColorPaint(SkiaSharp.SKColor.Parse("#b3b9c5")),
                 Labeler = (price) =>
                 {
                     int precision;
@@ -128,7 +132,7 @@ namespace CryptoCurrencies.WPF.ViewModels
 
                 Culture = _coinStore.Culture;
 
-                var resp = await _coinsService.GetCoinMarkets("usd", _coinStore.SelectedCoin);
+                var resp = await _coinsService.GetCoinMarkets("usd", 1, new string[] { _coinStore.SelectedCoin });
 
                 Coin = resp.FirstOrDefault();
 

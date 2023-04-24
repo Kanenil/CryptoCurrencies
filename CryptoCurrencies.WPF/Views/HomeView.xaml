@@ -19,14 +19,15 @@
     </Behaviors:Interaction.Triggers>
     <UserControl.Resources>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:PreviousPageConverter x:Key="PreviousPageConverter"/>
     </UserControl.Resources>
-    <Grid Background="#000000">
+    <Grid Background="{StaticResource PrimaryBackgroundColor}">
         <components:Loader Panel.ZIndex="1"
                            IsLoading="{Binding IsLoading}"
                            HasError="{Binding HasError}"
                            Description="{Binding Description}"
                            Title="{Binding Title}"
-                           DismissError="{Binding DismissErrorCommand}"/>
+                           DismissError="{Binding LoadCoinsCommand}"/>
 
         <ScrollViewer Background="Transparent" 
                       Margin="0 2 0 0"
@@ -36,109 +37,104 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <components:CoinsTable Coins="{Binding Coins}"/>
-                <WrapPanel
-                    Grid.Row="1"
-                    VerticalAlignment="Top"
-          Margin="0 0 0 10"
-          HorizontalAlignment="Center"
-          Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-        >
-                    <Button>
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border 
-                        Cursor="Hand" 
-                        CornerRadius="5" 
-                        BorderThickness="0.75" 
-                        BorderBrush="#4c4c4c"
-                        Background="{TemplateBinding Background}"
-                        Padding="14 6 18 6"
-                       >
-                                                <ContentPresenter />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#151515" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#3c3c3c" />
-                                    </Trigger>
-                                    <Trigger Property="IsFocused" Value="True">
-                                        <Setter Property="Background" Value="#3c3c3c" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock FontSize="22"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource PrimaryTextColor}"
+                               Margin="10">
+                        Cryptocurrency Prices
+                    </TextBlock>
+
+                    <TextBox Grid.Column="1"
+                             Background="{StaticResource SecundaryBackgroundColor}"
+                             Tag="Search..."
+                             HorizontalAlignment="Right"
+                             Text="{Binding Search}"
+                             Padding="10 4 0 3"
+                             Name="Search"
+                             Style="{StaticResource PrimaryTextBoxStyle}"
+                             FontSize="12"
+                             Margin="4 3 -2 2">
+                        <Behaviors:Interaction.Triggers>
+                            <Behaviors:KeyTrigger Key="Return" FiredOn="KeyDown">
+                                <Behaviors:InvokeCommandAction Command="{Binding LoadCoinsCommand}"/>
+                            </Behaviors:KeyTrigger>
+                        </Behaviors:Interaction.Triggers>
+                    </TextBox>
+
+
+                </Grid>
+                <components:CoinsTable Grid.Row="1" Coins="{Binding Coins}"/>
+                <WrapPanel Grid.Row="2"
+                           VerticalAlignment="Top"
+                           Margin="0 0 0 10"
+                           HorizontalAlignment="Center"
+                           Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                           >
+                    <Button Command="{Binding ChangePageCommand}"
+                            CommandParameter="-1"
+                            Width="100"
+                            Padding="0 10"
+                            Style="{StaticResource SecundaryButtonStyle}"
+                            IsEnabled="{Binding Page, Converter={StaticResource PreviousPageConverter}}">
+                        
                         <WrapPanel VerticalAlignment="Center">
                             <TextBlock 
-                VerticalAlignment="Center"  FontSize="16"
-                Foreground="#FFFFFF"
-              >
-                ←
+                                VerticalAlignment="Center"  
+                                FontSize="16"
+                                Foreground="#FFFFFF"
+                              >
+                                ←
                             </TextBlock>
                             <TextBlock 
-                VerticalAlignment="Center" FontWeight="Medium" FontSize="13" Margin="6 0 0 0"
-                Foreground="#FFFFFF"
-              >
-                Previous
+                                VerticalAlignment="Center" 
+                                FontWeight="Medium" 
+                                FontSize="13" 
+                                Margin="6 0 0 0"
+                                Foreground="#FFFFFF"
+                              >
+                                Previous
                             </TextBlock>
                         </WrapPanel>
                     </Button>
                     <TextBlock 
-            Margin="18 0 20 0" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"
-            Foreground="#FFFFFF"
-          >
-            Page <Run Text="{Binding CurrentPage}" />
-                    </TextBlock>
-                    <Button>
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Cursor="Hand" CornerRadius="5" BorderThickness="0.75" 
-                        BorderBrush="#4c4c4c"
-                        Background="{TemplateBinding Background}"
-                        Padding="28 6 18 6"
+                        Margin="18 0 20 0" 
+                        FontSize="14" 
+                        FontWeight="SemiBold" 
+                        VerticalAlignment="Center"
+                        Foreground="{StaticResource PrimaryTextColor}"
                       >
-                                                <ContentPresenter />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#151515" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#3c3c3c" />
-                                    </Trigger>
-                                    <Trigger Property="IsFocused" Value="True">
-                                        <Setter Property="Background" Value="#3c3c3c" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+            Page <Run Text="{Binding Page}" />
+                    </TextBlock>
+                    <Button Command="{Binding ChangePageCommand}"
+                            CommandParameter="1"
+                            Width="80"
+                            Padding="0 8"
+                            Style="{StaticResource SecundaryButtonStyle}">
+                        
                         <WrapPanel VerticalAlignment="Center">
                             <TextBlock 
-                VerticalAlignment="Center" 
-                FontWeight="Medium" 
-                FontSize="13"
-                Foreground="#FFFFFF"
-              >
-                Next
+                                VerticalAlignment="Center" 
+                                FontWeight="Medium" 
+                                FontSize="13"
+                                Foreground="#FFFFFF"
+                              >
+                                Next
                             </TextBlock>
                             <TextBlock 
-                VerticalAlignment="Center"
-                FontSize="16" 
-                Margin="6 3 0 3"
-                Foreground="#FFFFFF"
-              >
-                →
+                                VerticalAlignment="Center"
+                                FontSize="16" 
+                                Margin="6 3 0 3"
+                                Foreground="#FFFFFF"
+                              >
+                                →
                             </TextBlock>
                         </WrapPanel>
                     </Button>

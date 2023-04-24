@@ -6,6 +6,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/ScrollTheme.xaml"/>
+                <ResourceDictionary Source="Themes/DarkTheme.xaml"/>
+                <ResourceDictionary Source="Themes/TextBoxTheme.xaml"/>
+                <ResourceDictionary Source="Themes/ButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
