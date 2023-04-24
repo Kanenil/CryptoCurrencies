@@ -41,5 +41,16 @@ namespace CryptoCurrencies.CoinGecko.Services
                     { "price_change_percentage", "24h,7d" },
                 }));
         }
+
+        public async Task<ChartCoin> GetMarketChartsByCoinId(string id, string vsCurrency, string days)
+        {
+            return await GetAsync<ChartCoin>(QueryStringService.AppendQueryString(
+            CoinsEndPoints.MarketChartByCoinId(id),
+            new Dictionary<string, object>
+            {
+                {"vs_currency", string.Join(",",vsCurrency)},
+                {"days", days},
+            }));
+        }
     }
 }

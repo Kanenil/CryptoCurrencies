@@ -17,7 +17,7 @@
         <Separator Grid.Row="1"
                    Background="#2f2f2f"/>
         <ItemsControl Grid.Row="2"
-                      ItemsSource="{Binding Coins}">
+                      ItemsSource="{Binding Coins, RelativeSource={RelativeSource  AncestorType={x:Type UserControl}}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <local:CoinItem/>

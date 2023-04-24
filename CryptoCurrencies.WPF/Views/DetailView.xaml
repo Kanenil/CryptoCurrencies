@@ -23,12 +23,13 @@
     <Behaviors:Interaction.Triggers>
         <Behaviors:EventTrigger EventName="Loaded">
             <Behaviors:InvokeCommandAction Command="{Binding LoadCoinCommand}"/>
+            <Behaviors:InvokeCommandAction Command="{Binding LoadChartCommand}"/>
         </Behaviors:EventTrigger>
     </Behaviors:Interaction.Triggers>
     <Grid Background="#000000">
         
 
-        <Grid>
+        <Grid MaxWidth="1400">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
@@ -41,33 +42,105 @@
 
             <Button HorizontalAlignment="Left"
                     Margin="6"
-                    Padding="10 6"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Cursor="Hand"
                     Command="{Binding MoveToHomeCommand}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Height="20" Width="20" 
-                             Icon="ArrowLeft"
-                             Foreground="#FFFFFF" />
-
-                    <TextBlock Text="Move back"
-                               Foreground="#FFFFFF"
-                               Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Margin="10 0 0 0"/>
-                </Grid>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border 
+                        Cursor="Hand" 
+                        CornerRadius="5" 
+                        BorderThickness="0.75" 
+                        BorderBrush="#4c4c4c"
+                        Background="{TemplateBinding Background}"
+                        Padding="14 6 18 6"
+                       >
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#151515" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3c3c3c" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="#3c3c3c" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <WrapPanel VerticalAlignment="Center">
+                    <TextBlock 
+                VerticalAlignment="Center"  FontSize="16"
+                Foreground="#FFFFFF"
+              >
+                ←
+                    </TextBlock>
+                    <TextBlock 
+                VerticalAlignment="Center" FontWeight="Medium" FontSize="13" Margin="6 0 0 0"
+                Foreground="#FFFFFF"
+              >
+                Back
+                    </TextBlock>
+                </WrapPanel>
             </Button>
+
+            <Grid Grid.Row="1"
+                  Margin="10 10 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <components:Loader Panel.ZIndex="1"
+                                   Grid.RowSpan="2"
+                                   IsLoading="{Binding IsLoadingChart}"
+                                   HasError="{Binding HasErrorChart}"
+                                   Description="{Binding DescriptionChart}"
+                                   Title="{Binding TitleChart}"
+                                   DismissError="{Binding DismissChartErrorCommand}"/>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock FontSize="22"
+                               FontWeight="SemiBold"
+                               Foreground="#FFFFFF">
+                        <Run Text="{Binding Coin.Name }" />
+                        Price Chart (<Run Text="{Binding Coin.Symbol, Converter={StaticResource ToUpperConverter}}" />)
+                    </TextBlock>
+
+                    <TextBlock FontWeight="Medium" 
+                           Margin="0 10 0 0"
+                           Foreground="#b3b9c5"
+                           Grid.Row="1">
+                        Currency in USD.
+                    </TextBlock>
+                    
+                </Grid>
+                
+                <lvc:CartesianChart Grid.Row="1" 
+                                Series="{Binding Series}" 
+                                XAxes="{Binding XAxes}"
+                                YAxes="{Binding YAxes}"
+                                ZoomMode="Both" />
+            </Grid>
 
 
             <components:Loader Panel.ZIndex="1" 
                                Grid.RowSpan="2" 
-                               Grid.Column="1"/>
+                               Grid.Column="1"
+                               IsLoading="{Binding IsLoading}"
+                               HasError="{Binding HasError}"
+                               Description="{Binding Description}"
+                               Title="{Binding Title}"
+                               DismissError="{Binding DismissErrorCommand}"/>
             
             <Border Grid.Column="1"
                     Grid.RowSpan="2"

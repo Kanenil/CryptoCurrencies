@@ -11,7 +11,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid Visibility="{Binding IsLoading, RelativeSource={RelativeSource  AncestorType={x:Type UserControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <Grid Background="#000000" Opacity="0.9" />
+        <Grid Background="#000000" Opacity="1" />
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <fa:ImageAwesome Name="LoadingIcon" Height="30" Width="30" Icon="CircleOutlineNotch" Spin="True"
                         SpinDuration="0.65" Foreground="Gray" />

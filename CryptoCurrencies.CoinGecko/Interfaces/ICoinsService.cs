@@ -11,5 +11,6 @@ namespace CryptoCurrencies.CoinGecko.Interfaces
     {
         Task<List<MainCoin>> GetCoinMarkets(string vsCurrency);
         Task<List<DetailCoin>> GetCoinMarkets(string vsCurrency, string coin);
+        Task<ChartCoin> GetMarketChartsByCoinId(string id, string vsCurrency, string days);
     }
 }
