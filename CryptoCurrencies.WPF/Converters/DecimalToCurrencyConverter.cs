@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace CryptoCurrencies.WPF.Converters
@@ -12,7 +13,7 @@ namespace CryptoCurrencies.WPF.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values is null) return string.Empty;
+            if (values.Contains(null) || values.Contains(DependencyProperty.UnsetValue)) return string.Empty;
 
             var cult = (string)values[1];
             var price = (decimal)values[0];

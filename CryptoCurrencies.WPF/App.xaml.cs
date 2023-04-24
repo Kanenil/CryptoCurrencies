@@ -4,6 +4,7 @@ using CryptoCurrencies.CoinGecko.Interfaces;
 using CryptoCurrencies.CoinGecko.Services;
 using CryptoCurrencies.WPF.Interfaces;
 using CryptoCurrencies.WPF.Services;
+using CryptoCurrencies.WPF.Stores;
 using CryptoCurrencies.WPF.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -34,11 +35,12 @@ namespace CryptoCurrencies.WPF
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ICoinsService, CoinsService>();
 
+            services.AddSingleton<CoinStore>();
+
             services.AddSingleton<MainViewModel>();
             services.AddTransient<HomeViewModel>();
             services.AddTransient<DetailViewModel>();
 
-            services.AddSingleton<HttpClient>();
             services.AddSingleton<Func<Type, BaseViewModel>>(s => viewModelType => (BaseViewModel)s.GetRequiredService(viewModelType));
 
             services.AddSingleton<MainWindow>(s => new MainWindow()

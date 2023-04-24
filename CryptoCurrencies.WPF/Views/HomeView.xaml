@@ -18,13 +18,18 @@
         </Behaviors:EventTrigger>
     </Behaviors:Interaction.Triggers>
     <Grid Background="#000000">
-        <components:Loader Panel.ZIndex="1"/>
+        <components:Loader Panel.ZIndex="1"
+                           IsLoading="{Binding IsLoading}"
+                           HasError="{Binding HasError}"
+                           Description="{Binding Description}"
+                           Title="{Binding Title}"
+                           DismissError="{Binding DismissErrorCommand}"/>
 
         <ScrollViewer Background="Transparent" 
                       Margin="0 2 0 0"
                       PanningMode="VerticalOnly"
                       HorizontalScrollBarVisibility="Auto">
-            <Grid >
+            <Grid MaxWidth="900">
                 <components:CoinsTable Coins="{Binding Coins}"/>
             </Grid>
         </ScrollViewer>

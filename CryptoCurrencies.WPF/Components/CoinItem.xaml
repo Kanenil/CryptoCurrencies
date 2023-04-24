@@ -15,11 +15,11 @@
         <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
         <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
     </UserControl.Resources>
-    <Grid Tag="{Binding Id}" Cursor="Hand">
+    <Grid Cursor="Hand">
         <Behaviors:Interaction.Triggers>
             <Behaviors:EventTrigger EventName="PreviewMouseUp">
                 <Behaviors:InvokeCommandAction Command="{Binding DataContext.NavigateToDetailsCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                               CommandParameter="{Binding}"/>
+                                               CommandParameter="{Binding Id}"/>
             </Behaviors:EventTrigger>
         </Behaviors:Interaction.Triggers>
 
@@ -46,83 +46,72 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Padding="10 12"
-                                           FontWeight="Medium"
-                                           HorizontalAlignment="Left"
-                                           Text="{Binding MarketCapRank}" 
-                                           Foreground="#b3b9c5"/>
+                   FontWeight="Medium"
+                   HorizontalAlignment="Left"
+                   Text="{Binding MarketCapRank}" 
+                   Foreground="#b3b9c5"/>
 
         <WrapPanel Grid.Column="1" 
-                                           VerticalAlignment="Center">
-            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="24" Width="24"
-                                           Source="{Binding Image}"/>
+                   VerticalAlignment="Center">
+            <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                   Height="24" Width="24"
+                   Source="{Binding Image}"/>
             <TextBlock Margin="6 0 6 1" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="13.5" 
-                                               FontWeight="SemiBold"
-                                               Text="{Binding Name}" 
-                                               Foreground="#FFFFFF"/>
+                       VerticalAlignment="Center" 
+                       FontSize="13.5" 
+                       FontWeight="SemiBold"
+                       Text="{Binding Name}" 
+                       Foreground="#FFFFFF"/>
             <TextBlock Margin="0 0 0 0.25"
-                                               FontSize="13.5"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"
-                                               Foreground="#b3b9c5"
-                                               Text="{Binding Symbol, Converter={StaticResource ToUpperConverter}}" />
+                       FontSize="13.5"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Foreground="#b3b9c5"
+                       Text="{Binding Symbol, Converter={StaticResource ToUpperConverter}}" />
         </WrapPanel>
 
         <TextBlock Grid.Column="2"
-                                           Padding="10 12"
-                                           FontSize="13.25"
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Right"
-                                           Foreground="#FFFFFF">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Text">
-                        <Setter.Value>
-                            <MultiBinding Converter="{StaticResource DecimalToCurrencyConverter}">
-                                <Binding Path="CurrentPrice"/>
-                                <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
-                            </MultiBinding>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TextBlock.Style>
+                   Padding="10 12"
+                   FontSize="13.25"
+                   FontWeight="SemiBold"
+                   HorizontalAlignment="Right"
+                   Foreground="#FFFFFF">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource DecimalToCurrencyConverter}">
+                    <Binding Path="CurrentPrice"/>
+                    <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
+                </MultiBinding>
+            </TextBlock.Text>
         </TextBlock>
 
         <TextBlock Grid.Column="3"
-                                           Padding="10 12"
-                                           FontSize="13.5"
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Right"
-                                           Text="{Binding PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToTextConverter}}"
-                                           Foreground="{Binding PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToBrushConverter}}"/>
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="SemiBold"
+                   HorizontalAlignment="Right"
+                   Text="{Binding PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToTextConverter}}"
+                   Foreground="{Binding PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToBrushConverter}}"/>
 
         <TextBlock Grid.Column="4"
-                                           Padding="10 12"
-                                           FontSize="13.5"
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Right"
-                                           Text="{Binding PriceChangePercentage7DInCurrency, Converter={StaticResource PercentageToTextConverter}}"
-                                           Foreground="{Binding PriceChangePercentage7DInCurrency, Converter={StaticResource PercentageToBrushConverter}}"/>
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="SemiBold"
+                   HorizontalAlignment="Right"
+                   Text="{Binding PriceChangePercentage7DInCurrency, Converter={StaticResource PercentageToTextConverter}}"
+                   Foreground="{Binding PriceChangePercentage7DInCurrency, Converter={StaticResource PercentageToBrushConverter}}"/>
 
         <TextBlock Grid.Column="5"
-                                           Padding="10 12"
-                                           FontSize="13.5"
-                                           FontWeight="Medium"
-                                           HorizontalAlignment="Right"
-                                           Foreground="#FFFFFF">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Text">
-                        <Setter.Value>
-                            <MultiBinding Converter="{StaticResource DecimalToFullCurrencyConverter}">
-                                <Binding Path="MarketCap"/>
-                                <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
-                            </MultiBinding>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TextBlock.Style>
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Right"
+                   Foreground="#FFFFFF">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource DecimalToFullCurrencyConverter}">
+                    <Binding Path="MarketCap"/>
+                    <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
+                </MultiBinding>
+            </TextBlock.Text>
         </TextBlock>
     </Grid>
 </UserControl>

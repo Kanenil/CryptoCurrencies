@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CryptoCurrencies.CoinGecko.Interfaces;
 using CryptoCurrencies.CoinGecko.Models;
 using CryptoCurrencies.WPF.Interfaces;
+using CryptoCurrencies.WPF.Stores;
 using CryptoCurrencies.WPF.Views;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,11 @@ namespace CryptoCurrencies.WPF.ViewModels
     public partial class HomeViewModel : BaseViewModel
     {
         private readonly ICoinsService _coinsService;
-        public HomeViewModel(INavigationService navigationService, ICoinsService coinsService) : base(navigationService)
+        private readonly CoinStore _coinStore;
+        public HomeViewModel(INavigationService navigationService, ICoinsService coinsService, CoinStore coinStore) : base(navigationService)
         {
             _coinsService = coinsService;
+            _coinStore = coinStore;
 
             LoadCoinsCommand = new AsyncRelayCommand(LoadCoinsAsync);
             DismissErrorCommand = new AsyncRelayCommand(LoadCoinsAsync);
@@ -70,8 +73,9 @@ namespace CryptoCurrencies.WPF.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateToDetails(MainCoin? coin)
+        private void NavigateToDetails(string? coin)
         {
+            _coinStore.SelectedCoin = coin;
             Navigation.NavigateTo<DetailViewModel>();
         }
     }

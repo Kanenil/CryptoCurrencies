@@ -13,54 +13,11 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="2.4*"/>
-                <ColumnDefinition Width="1.2*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1.5*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Padding="10 12"
-                               HorizontalAlignment="Left"
-                               Text="#"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"/>
-            <TextBlock Grid.Column="1"
-                               Padding="10 12"
-                               Text="Name"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"/>
-            <TextBlock Grid.Column="2"
-                               Padding="10 12"
-                               Text="Price"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"
-                               HorizontalAlignment="Right"/>
-            <TextBlock Grid.Column="3"
-                               Padding="10 12"
-                               Text="24h %"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"
-                               HorizontalAlignment="Right"/>
-            <TextBlock Grid.Column="4"
-                               Padding="10 12"
-                               Text="7d %"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"
-                               HorizontalAlignment="Right"/>
-            <TextBlock Grid.Column="5"
-                               Padding="10 12"
-                               Text="Market Cap"
-                               FontWeight="Bold"
-                               Foreground="#FFFFFF"
-                               HorizontalAlignment="Right"/>
-        </Grid>
+        <local:CoinsTableHeader/>
         <Separator Grid.Row="1"
-                           Background="#2f2f2f"/>
+                   Background="#2f2f2f"/>
         <ItemsControl Grid.Row="2"
-                              ItemsSource="{Binding Coins}">
+                      ItemsSource="{Binding Coins}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <local:CoinItem/>

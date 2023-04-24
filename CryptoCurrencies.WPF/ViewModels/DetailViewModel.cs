@@ -8,59 +8,79 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CryptoCurrencies.WPF.Stores;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CryptoCurrencies.CoinGecko.Models;
+using CryptoCurrencies.CoinGecko.Interfaces;
 
 namespace CryptoCurrencies.WPF.ViewModels
 {
     public partial class DetailViewModel : BaseViewModel
     {
-        public DetailViewModel(INavigationService navigationService) : base(navigationService)
+        private readonly CoinStore _coinStore;
+        private readonly ICoinsService _coinsService;
+
+        public DetailViewModel(INavigationService navigationService, CoinStore coinStore, ICoinsService coinsService) : base(navigationService)
         {
+            _coinStore = coinStore;
+            _coinsService = coinsService;
+
+            LoadCoinCommand = new AsyncRelayCommand(LoadCoinAsync);
         }
 
-        public Axis[] XAxes { get; set; } =
-    {
-        new Axis
-        {
-            LabelsRotation = 15,
-            Labeler = value => new DateTime((long)value).ToString("yyyy MMM dd"),
-            // set the unit width of the axis to "days"
-            // since our X axis is of type date time and 
-            // the interval between our points is in days
-            UnitWidth = TimeSpan.FromDays(1).Ticks
-        }
-    };
+        [ObservableProperty]
+        private string _culture = "en-US";
 
-        public ISeries[] Series { get; set; } =
+        [ObservableProperty]
+        private bool _isLoading;
+
+        [ObservableProperty]
+        private bool _hasError;
+
+        [ObservableProperty]
+        private string _title;
+
+        [ObservableProperty]
+        private string _description;
+
+        [ObservableProperty]
+        private DetailCoin _coin = new();
+
+        public IAsyncRelayCommand LoadCoinCommand { get; }
+        private async Task LoadCoinAsync()
         {
-        new CandlesticksSeries<FinancialPoint>
-        {
-            Values = new ObservableCollection<FinancialPoint>
+            IsLoading = true;
+            HasError = false;
+
+            try
             {
-                //                      date, high, open, close, low
-                new(new DateTime(2021, 1, 1), 523, 500, 450, 400),
-                new(new DateTime(2021, 1, 2), 500, 450, 425, 400),
-                new(new DateTime(2021, 1, 3), 490, 425, 400, 380),
-                new(new DateTime(2021, 1, 4), 420, 400, 420, 380),
-                new(new DateTime(2021, 1, 5), 520, 420, 490, 400),
-                new(new DateTime(2021, 1, 6), 580, 490, 560, 440),
-                new(new DateTime(2021, 1, 7), 570, 560, 350, 340),
-                new(new DateTime(2021, 1, 8), 380, 350, 380, 330),
-                new(new DateTime(2021, 1, 9), 440, 380, 420, 350),
-                new(new DateTime(2021, 1, 10), 490, 420, 460, 400),
-                new(new DateTime(2021, 1, 11), 520, 460, 510, 460),
-                new(new DateTime(2021, 1, 12), 580, 510, 560, 500),
-                new(new DateTime(2021, 1, 13), 600, 560, 540, 510),
-                new(new DateTime(2021, 1, 14), 580, 540, 520, 500),
-                new(new DateTime(2021, 1, 15), 580, 520, 560, 520),
-                new(new DateTime(2021, 1, 16), 590, 560, 580, 520),
-                new(new DateTime(2021, 1, 17), 650, 580, 630, 550),
-                new(new DateTime(2021, 1, 18), 680, 630, 650, 600),
-                new(new DateTime(2021, 1, 19), 670, 650, 600, 570),
-                new(new DateTime(2021, 1, 20), 640, 600, 610, 560),
-                new(new DateTime(2021, 1, 21), 630, 610, 630, 590),
+                Title = "Loading Data";
+                Description = "Please wait, we are loading coin data";
+
+                Culture = _coinStore.Culture;
+
+                var resp = await _coinsService.GetCoinMarkets("usd", _coinStore.SelectedCoin);
+
+                Coin = resp.FirstOrDefault();
+
+                IsLoading = false;
+            }
+            catch (Exception)
+            {
+                Title = "Too many requests";
+                Description = "Please wait for the API to be available again";
+
+                HasError = true;
             }
         }
-    };
 
+        [RelayCommand]
+        private void MoveToHome()
+        {
+            if(LoadCoinCommand.IsRunning && LoadCoinCommand.CanBeCanceled)
+                LoadCoinCommand.Cancel();
+            Navigation.NavigateTo<HomeViewModel>();
+        }
     }
 }

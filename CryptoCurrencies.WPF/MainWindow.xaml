@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         d:DataContext="{x:Type VM:MainViewModel}"
         Title="Crypto Currencies" 
-        Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Height="600" Width="1000"
         MinHeight="450" MinWidth="800">
     <Grid>
         <ContentControl Content="{Binding Navigation.CurrentView}">

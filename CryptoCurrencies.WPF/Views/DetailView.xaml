@@ -5,10 +5,179 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CryptoCurrencies.WPF.Views" 
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             d:DataContext="{x:Type VM:HomeViewModel}"
+             xmlns:VM="clr-namespace:CryptoCurrencies.WPF.ViewModels" 
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:components="clr-namespace:CryptoCurrencies.WPF.Components" 
+             xmlns:converters="clr-namespace:CryptoCurrencies.WPF.Converters" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             d:DataContext="{x:Type VM:DetailViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}"/>
+    <UserControl.Resources>
+        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:DecimalToCurrencyConverter x:Key="DecimalToCurrencyConverter"/>
+        <converters:PercentageToTextConverter x:Key="PercentageToTextConverter"/>
+        <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
+        <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
+    </UserControl.Resources>
+    <Behaviors:Interaction.Triggers>
+        <Behaviors:EventTrigger EventName="Loaded">
+            <Behaviors:InvokeCommandAction Command="{Binding LoadCoinCommand}"/>
+        </Behaviors:EventTrigger>
+    </Behaviors:Interaction.Triggers>
+    <Grid Background="#000000">
+        
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="350px"/>
+            </Grid.ColumnDefinitions>
+
+            <Button HorizontalAlignment="Left"
+                    Margin="6"
+                    Padding="10 6"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Command="{Binding MoveToHomeCommand}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <fa:ImageAwesome Height="20" Width="20" 
+                             Icon="ArrowLeft"
+                             Foreground="#FFFFFF" />
+
+                    <TextBlock Text="Move back"
+                               Foreground="#FFFFFF"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Margin="10 0 0 0"/>
+                </Grid>
+            </Button>
+
+
+            <components:Loader Panel.ZIndex="1" 
+                               Grid.RowSpan="2" 
+                               Grid.Column="1"/>
+            
+            <Border Grid.Column="1"
+                    Grid.RowSpan="2"
+                    VerticalAlignment="Top"
+                    Margin="6"
+                    BorderThickness="0.5"
+                    BorderBrush="#555555"
+                    Background="#161616"
+                    Padding="28"
+                    CornerRadius="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock FontSize="22"
+                               FontWeight="SemiBold"
+                               Foreground="#FFFFFF">
+                        <Run Text="{Binding Coin.Symbol, Converter={StaticResource ToUpperConverter}}" />
+                        Price Statistics
+                    </TextBlock>
+
+                    <TextBlock FontWeight="Medium" 
+                           Margin="0 20 0 0"
+                           Foreground="#b3b9c5"
+                           Grid.Row="1">
+                        <Run Text="{Binding Coin.Name}" />
+                        Price Today
+                    </TextBlock>
+
+                    <Separator Margin="0 10 0 0" 
+                           Background="#2f2f2f"
+                           Grid.Row="2"/>
+                    
+                    <DockPanel Grid.Row="3" 
+                               Margin="0 12">
+                        <TextBlock FontWeight="SemiBold" 
+                                   FontSize="14" 
+                                   Foreground="#b3b9c5">
+                              <Run Text="{Binding Coin.Name}" />
+                              Price
+                        </TextBlock>
+                        <TextBlock Grid.Row="3" HorizontalAlignment="Right" 
+                                   FontWeight="SemiBold" 
+                                   FontSize="13.5"
+                                   Foreground="#FFFFFF">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource DecimalToCurrencyConverter}">
+                                    <Binding Path="Coin.CurrentPrice"  />
+                                    <Binding Path="Culture"  />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DockPanel>
+
+                    <Separator Margin="0 10 0 0" 
+                           Background="#2f2f2f"
+                           Grid.Row="4"/>
+
+                    <DockPanel Margin="0 12"
+                               Grid.Row="5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" FontWeight="Medium" FontSize="13.5" Foreground="#b3b9c5">
+                    Price Change
+                            </TextBlock>
+                            <Border VerticalAlignment="Center" Margin="4 0" Padding="4" CornerRadius="3" 
+                     Background="#2f2f2f"
+                   >
+                                <TextBlock Foreground="#b3b9c5" FontSize="10.5" FontWeight="Medium">
+                      24h
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock
+                    HorizontalAlignment="Right"
+                    FontWeight="SemiBold"
+                    FontSize="13.5"
+                    Foreground="#FFFFFF" >
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource DecimalToCurrencyConverter}">
+                                        <Binding Path="Coin.PriceChange24H"  />
+                                        <Binding Path="Culture"  />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock
+                    Margin="0 5 0 0"
+                    HorizontalAlignment="Right"
+                    FontSize="12"
+                    FontWeight="SemiBold"
+                    Text="{Binding Coin.PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToTextConverter}}"
+                    Foreground="{Binding Coin.PriceChangePercentage24HInCurrency, Converter={StaticResource PercentageToBrushConverter}}" />
+                        </StackPanel>
+                    </DockPanel>
+
+                </Grid>
+            </Border>
+
+            
+
+            
+
+        </Grid>
     </Grid>
 </UserControl>
