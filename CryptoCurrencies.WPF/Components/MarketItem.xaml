@@ -8,9 +8,11 @@
              xmlns:converters="clr-namespace:CryptoCurrencies.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <converters:ToUpperConverter x:Key="ToUpperConverter"/>
         <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
+        <converters:DecimalToCurrencyConverter x:Key="DecimalToCurrencyConverter"/>
         <converters:SequenceNumberConverter x:Key="SequenceNumberConverter"/>
     </UserControl.Resources>
     
@@ -19,7 +21,7 @@
         <Behaviors:Interaction.Triggers>
             <Behaviors:EventTrigger EventName="PreviewMouseUp">
                 <Behaviors:InvokeCommandAction Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                               CommandParameter="{Binding TradeUrl}"/>
+                                               CommandParameter="{Binding TradeUrl}"/>
             </Behaviors:EventTrigger>
         </Behaviors:Interaction.Triggers>
 
@@ -33,9 +35,9 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Padding="10 12"
-                                   FontWeight="Medium"
-                                   HorizontalAlignment="Left"
-                                   Foreground="{DynamicResource SecundaryTextColor}">
+                   FontWeight="Medium"
+                   HorizontalAlignment="Left"
+                   Foreground="{DynamicResource SecundaryTextColor}">
             <TextBlock.Text>
                 <MultiBinding Converter="{StaticResource SequenceNumberConverter}" ConverterParameter="0">
                     <Binding Path="."/>
@@ -45,46 +47,46 @@
         </TextBlock>
 
         <WrapPanel Grid.Column="1" 
-                                   VerticalAlignment="Center">
+                   VerticalAlignment="Center">
             <Image RenderOptions.BitmapScalingMode="HighQuality" 
-                                   Height="24" Width="24"
-                                   Source="{Binding Market.Logo}"/>
+                   Height="24" Width="24"
+                   Source="{Binding Market.Logo}"/>
             <TextBlock Margin="6 0 6 1" 
-                                       VerticalAlignment="Center" 
-                                       FontSize="13.5" 
-                                       FontWeight="SemiBold"
-                                       Text="{Binding Market.Name}" 
-                                       Foreground="{DynamicResource PrimaryTextColor}"/>
+                       VerticalAlignment="Center" 
+                       FontSize="13.5" 
+                       FontWeight="SemiBold"
+                       Text="{Binding Market.Name}" 
+                       Foreground="{DynamicResource PrimaryTextColor}"/>
         </WrapPanel>
 
         <TextBlock Padding="10 12"
-                                   FontSize="13.25"
-                                   Grid.Column="2"
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource SecundaryTextColor}">
-                            <Run Text="{Binding Base, Converter={StaticResource ToUpperConverter}}"/>/<Run Text="{Binding Target, Converter={StaticResource ToUpperConverter}}"/>
+                   FontSize="13.25"
+                   Grid.Column="2"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource SecundaryTextColor}">
+            <Run Text="{Binding Base, Converter={StaticResource ToUpperConverter}}"/>/<Run Text="{Binding Target, Converter={StaticResource ToUpperConverter}}"/>
         </TextBlock>
 
         <TextBlock Grid.Column="3"
-                                   Padding="10 12"
-                                   FontSize="13.5"
-                                   FontWeight="Medium"
-                                   HorizontalAlignment="Right"
-                                   Foreground="{DynamicResource PrimaryTextColor}"
-                                   Text="{Binding Last, Converter={StaticResource DecimalToFullCurrencyConverter}}"/>
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource PrimaryTextColor}"
+                   Text="{Binding Last, Converter={StaticResource DecimalToCurrencyConverter}}"/>
 
         <TextBlock Grid.Column="4"
-                                   Padding="10 12"
-                                   FontSize="13.5"
-                                   FontWeight="Medium"
-                                   HorizontalAlignment="Right"
-                                   Foreground="{DynamicResource PrimaryTextColor}"
-                                   Text="{Binding Volume, Converter={StaticResource DecimalToFullCurrencyConverter}}"/>
+                   Padding="10 12"
+                   FontSize="13.5"
+                   FontWeight="Medium"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource PrimaryTextColor}"
+                   Text="{Binding Volume, Converter={StaticResource DecimalToFullCurrencyConverter}}"/>
 
         <Ellipse Height="15" Width="15"
-                                 Grid.Column="5"
-                                 HorizontalAlignment="Center"
-                                 Fill="{Binding TrustScore, StringFormat='#{0}'}" />
+                 Grid.Column="5"
+                 HorizontalAlignment="Center"
+                 Fill="{Binding TrustScore, StringFormat='#{0}'}" />
     </Grid>
 </UserControl>

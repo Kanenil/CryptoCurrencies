@@ -188,7 +188,6 @@ namespace CryptoCurrencies.WPF.ViewModels
 
             }
         }
-
         private List<FinancialPoint> ConvertToFinancialPoint(double[][] marketChartById)
         {
             List<FinancialPoint> financialPoints = new List<FinancialPoint>();

@@ -7,9 +7,11 @@
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
+    
     <Grid Visibility="{Binding IsLoading, RelativeSource={RelativeSource  AncestorType={x:Type UserControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Grid Background="{DynamicResource PrimaryBackgroundColor}" Opacity="1" />
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

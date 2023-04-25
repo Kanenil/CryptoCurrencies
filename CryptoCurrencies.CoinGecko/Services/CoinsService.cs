@@ -43,7 +43,6 @@ namespace CryptoCurrencies.CoinGecko.Services
                 }));
         }
 
-
         public async Task<List<MainCoin>> GetCoinsBySearch(string vsCurrency, int page, string query)
         {
             var resp = await GetAsync<SearchCoin>(QueryStringService.AppendQueryString($"{BaseEndPoint.ApiEndPoint.AbsoluteUri}search",

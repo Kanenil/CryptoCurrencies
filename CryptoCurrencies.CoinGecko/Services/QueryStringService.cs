@@ -14,10 +14,6 @@ namespace CryptoCurrencies.CoinGecko.Services
         {
             return CreateUrl(path, parameter);
         }
-        public static Uri AppendQueryString(string path)
-        {
-            return CreateUrl(path, new Dictionary<string, object>());
-        }
         private static Uri CreateUrl(string path, Dictionary<string, object> parameter)
         {
             var urlParameters = new List<string>();

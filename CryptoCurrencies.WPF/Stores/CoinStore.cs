@@ -13,8 +13,5 @@ namespace CryptoCurrencies.WPF.Stores
     {
         [ObservableProperty]
         private string? _selectedCoin = null;
-
-        [ObservableProperty]
-        private string _culture = "en-US";
     }
 }

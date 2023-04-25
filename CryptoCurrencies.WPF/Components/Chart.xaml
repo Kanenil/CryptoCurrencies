@@ -8,15 +8,12 @@
              xmlns:converters="clr-namespace:CryptoCurrencies.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <converters:ToUpperConverter x:Key="ToUpperConverter"/>
-        <converters:DecimalToCurrencyConverter x:Key="DecimalToCurrencyConverter"/>
-        <converters:PercentageToTextConverter x:Key="PercentageToTextConverter"/>
-        <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
-        <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
-        <converters:SequenceNumberConverter x:Key="SequenceNumberConverter"/>
         <converters:ImageToSourceConverter x:Key="ImageToSourceConverter"/>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
