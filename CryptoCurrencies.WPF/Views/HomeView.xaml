@@ -17,16 +17,18 @@
             <Behaviors:InvokeCommandAction Command="{Binding LoadCoinsCommand}"/>
         </Behaviors:EventTrigger>
     </Behaviors:Interaction.Triggers>
+    
     <UserControl.Resources>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:PreviousPageConverter x:Key="PreviousPageConverter"/>
     </UserControl.Resources>
-    <Grid Background="{StaticResource PrimaryBackgroundColor}">
+    
+    <Grid Background="{DynamicResource PrimaryBackgroundColor}">
         <components:Loader Panel.ZIndex="1"
-                           IsLoading="{Binding IsLoading}"
-                           HasError="{Binding HasError}"
-                           Description="{Binding Description}"
-                           Title="{Binding Title}"
+                           IsLoading="{Binding CoinsLoader.IsLoading}"
+                           HasError="{Binding CoinsLoader.HasError}"
+                           Description="{Binding CoinsLoader.Description}"
+                           Title="{Binding CoinsLoader.Title}"
                            DismissError="{Binding LoadCoinsCommand}"/>
 
         <ScrollViewer Background="Transparent" 
@@ -47,19 +49,18 @@
 
                     <TextBlock FontSize="22"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource PrimaryTextColor}"
+                               Foreground="{DynamicResource PrimaryTextColor}"
                                Margin="10">
                         Cryptocurrency Prices
                     </TextBlock>
 
                     <TextBox Grid.Column="1"
-                             Background="{StaticResource SecundaryBackgroundColor}"
                              Tag="Search..."
                              HorizontalAlignment="Right"
                              Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Padding="10 4 0 3"
                              Name="Search"
-                             Style="{StaticResource PrimaryTextBoxStyle}"
+                             Style="{DynamicResource PrimaryTextBoxStyle}"
                              FontSize="12"
                              Margin="4 3 -2 2">
                         <Behaviors:Interaction.Triggers>
@@ -76,20 +77,19 @@
                            VerticalAlignment="Top"
                            Margin="0 0 0 10"
                            HorizontalAlignment="Center"
-                           Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                           Visibility="{Binding CoinsLoader.IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
                            >
                     <Button Command="{Binding ChangePageCommand}"
                             CommandParameter="-1"
                             Width="100"
                             Padding="0 10"
-                            Style="{StaticResource SecundaryButtonStyle}"
+                            Style="{DynamicResource SecundaryButtonStyle}"
                             IsEnabled="{Binding Page, Converter={StaticResource PreviousPageConverter}}">
                         
                         <WrapPanel VerticalAlignment="Center">
                             <TextBlock 
                                 VerticalAlignment="Center"  
                                 FontSize="16"
-                                Foreground="#FFFFFF"
                               >
                                 ←
                             </TextBlock>
@@ -98,7 +98,6 @@
                                 FontWeight="Medium" 
                                 FontSize="13" 
                                 Margin="6 0 0 0"
-                                Foreground="#FFFFFF"
                               >
                                 Previous
                             </TextBlock>
@@ -109,7 +108,7 @@
                         FontSize="14" 
                         FontWeight="SemiBold" 
                         VerticalAlignment="Center"
-                        Foreground="{StaticResource PrimaryTextColor}"
+                        Foreground="{DynamicResource PrimaryTextColor}"
                       >
             Page <Run Text="{Binding Page}" />
                     </TextBlock>
@@ -117,14 +116,13 @@
                             CommandParameter="1"
                             Width="80"
                             Padding="0 8"
-                            Style="{StaticResource SecundaryButtonStyle}">
+                            Style="{DynamicResource SecundaryButtonStyle}">
                         
                         <WrapPanel VerticalAlignment="Center">
                             <TextBlock 
                                 VerticalAlignment="Center" 
                                 FontWeight="Medium" 
                                 FontSize="13"
-                                Foreground="#FFFFFF"
                               >
                                 Next
                             </TextBlock>
@@ -132,7 +130,6 @@
                                 VerticalAlignment="Center"
                                 FontSize="16" 
                                 Margin="6 3 0 3"
-                                Foreground="#FFFFFF"
                               >
                                 →
                             </TextBlock>

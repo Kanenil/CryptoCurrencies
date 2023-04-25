@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Windows.Interop;
+using CryptoCurrencies.WPF.Core;
+using FontAwesome.WPF;
 
 namespace CryptoCurrencies.WPF
 {
@@ -23,44 +25,17 @@ namespace CryptoCurrencies.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public IntPtr Handle { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
-            SourceInitialized += (s, ea) =>
-            {
-                try
-                {
-                    Handle = new WindowInteropHelper(this).EnsureHandle();
-                    SetDarkMode();
-                }
-                catch { }
-            };
+            SetupWindow.SetupSettings(this);
+            Icon.Icon = Settings.Default.DarkTheme ? FontAwesomeIcon.SunOutline : FontAwesomeIcon.MoonOutline;
         }
 
-        private int SetDarkMode()
+        private void SwitchTheme(object sender, RoutedEventArgs e) 
         {
-            var darkMode = true;
-            return DwmSetWindowAttribute(
-                Handle,
-                DwmWindomAttributeType.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                ref darkMode,
-                Marshal.SizeOf<bool>()
-            );
-        }
-
-        [DllImport("dwmapi")]
-        private static extern int DwmSetWindowAttribute(
-            IntPtr hwnd,
-            DwmWindomAttributeType attribute,
-            [In] ref bool pvAttribute,
-            int cbAttribute
-        );
-
-        private enum DwmWindomAttributeType
-        {
-            DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+            Icon.Icon = Settings.Default.DarkTheme ? FontAwesomeIcon.MoonOutline : FontAwesomeIcon.SunOutline;
+            ThemeSwitcher.Switch(this);
         }
     }
 }

@@ -66,10 +66,10 @@ namespace CryptoCurrencies.CoinGecko.Services
                 })); ;
         }
 
-        public async Task<ChartCoin> GetMarketChartsByCoinId(string id, string vsCurrency, string days)
+        public async Task<dynamic> GetOhlcByCoinId(string id, string vsCurrency, string days)
         {
-            return await GetAsync<ChartCoin>(QueryStringService.AppendQueryString(
-            CoinsEndPoints.MarketChartByCoinId(id),
+            return await GetAsync<dynamic>(QueryStringService.AppendQueryString(
+            CoinsEndPoints.OhlcByCoinId(id),
             new Dictionary<string, object>
             {
                 {"vs_currency", string.Join(",",vsCurrency)},

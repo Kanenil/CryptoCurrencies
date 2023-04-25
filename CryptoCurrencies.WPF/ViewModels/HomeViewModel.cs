@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CryptoCurrencies.CoinGecko.Interfaces;
 using CryptoCurrencies.CoinGecko.Models;
+using CryptoCurrencies.WPF.Core;
 using CryptoCurrencies.WPF.Interfaces;
 using CryptoCurrencies.WPF.Stores;
 using CryptoCurrencies.WPF.Views;
@@ -31,22 +32,10 @@ namespace CryptoCurrencies.WPF.ViewModels
         }
 
         [ObservableProperty]
-        private string _culture = "en-US";
-
-        [ObservableProperty]
         private ObservableCollection<MainCoin> _coins;
 
         [ObservableProperty]
-        private bool _isLoading;
-
-        [ObservableProperty]
-        private bool _hasError;
-
-        [ObservableProperty]
-        private string _title;
-
-        [ObservableProperty]
-        private string _description;
+        private Loader _coinsLoader = new();
 
         [ObservableProperty]
         private string _search;
@@ -57,27 +46,27 @@ namespace CryptoCurrencies.WPF.ViewModels
         public IAsyncRelayCommand LoadCoinsCommand { get; }
         private async Task LoadCoinsAsync()
         {
-            IsLoading = true;
-            HasError = false;
+            CoinsLoader.IsLoading = true;
+            CoinsLoader.HasError = false;
 
             try
             {
-                Title = "Loading Data";
-                Description = "Please wait, we are loading coin data";
+                CoinsLoader.Title = "Loading Data";
+                CoinsLoader.Description = "Please wait, we are loading coin data";
 
                 if(string.IsNullOrWhiteSpace(Search))
                     Coins = new(await _coinsService.GetCoinMarkets("usd", Page));
                 else
                     Coins = new(await _coinsService.GetCoinsBySearch("usd", Page, Search));
 
-                IsLoading = false;
+                CoinsLoader.IsLoading = false;
             }
             catch (Exception)
             {
-                Title = "Too many requests";
-                Description = "Please wait for the API to be available again";
+                CoinsLoader.Title = "Too many requests";
+                CoinsLoader.Description = "Please wait for the API to be available again";
 
-                HasError = true;
+                CoinsLoader.HasError = true;
             }
         }
         [RelayCommand]

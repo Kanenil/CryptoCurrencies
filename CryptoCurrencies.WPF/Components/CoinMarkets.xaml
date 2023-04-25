@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="CryptoCurrencies.WPF.Components.CoinMarkets"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoCurrencies.WPF.Components" 
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:converters="clr-namespace:CryptoCurrencies.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:DecimalToCurrencyConverter x:Key="DecimalToCurrencyConverter"/>
+        <converters:PercentageToTextConverter x:Key="PercentageToTextConverter"/>
+        <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
+        <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
+        <converters:SequenceNumberConverter x:Key="SequenceNumberConverter"/>
+        <converters:ImageToSourceConverter x:Key="ImageToSourceConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <local:Loader Panel.ZIndex="1"
+                      Grid.RowSpan="3"
+                      IsLoading="{Binding MarketsLoader.IsLoading}"
+                      HasError="{Binding MarketsLoader.HasError}"
+                      Description="{Binding MarketsLoader.Description}"
+                      Title="{Binding MarketsLoader.Title}"
+                      DismissError="{Binding LoadMarketsCommand}"/>
+
+        <TextBlock FontSize="22"
+                   Margin="0 0 0 10"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource PrimaryTextColor}">
+            <Run Text="{Binding Coin.Name }" />
+            Markets
+        </TextBlock>
+
+        <local:MarketsHeader Grid.Row="1"/>
+
+        <Separator Grid.Row="2"
+                   Background="{DynamicResource PrimaryButtonHoverColor}"/>
+
+        <ItemsControl Grid.Row="3"
+                      ItemsSource="{Binding Markets}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:MarketItem />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Grid>
+</UserControl>

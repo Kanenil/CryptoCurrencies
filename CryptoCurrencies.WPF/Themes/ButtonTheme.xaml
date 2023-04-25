@@ -1,12 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Background" Value="{StaticResource PrimaryButtonColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
+        <Setter Property="Background" Value="{DynamicResource PrimaryButtonColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryButtonTextColor}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Cursor" Value="{x:Null}"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -27,21 +28,22 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryButtonHoverColor}"/>
+                <Setter Property="Background" Value="{DynamicResource PrimaryButtonHoverColor}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
             <Trigger Property="IsMouseCaptured" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryButtonHoverColor}"/>
+                <Setter Property="Background" Value="{DynamicResource PrimaryButtonHoverColor}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+
     <Style x:Key="SecundaryButtonStyle" TargetType="Button">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Background" Value="{StaticResource SecundaryButtonColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}"/>
+        <Setter Property="Background" Value="{DynamicResource SecundaryButtonColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource SecundaryButtonTextColor}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Cursor" Value="{x:Null}"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -50,7 +52,7 @@
                 <ControlTemplate TargetType="Button">
                     <Border CornerRadius="7" 
                             BorderThickness="1"
-                            BorderBrush="#44474D"
+                            BorderBrush="{DynamicResource SecundaryButtonHoverColor}"
                             Padding="{TemplateBinding Padding}"
                             Background="{TemplateBinding Background}">
                         <ContentPresenter HorizontalAlignment="Center" 
@@ -62,16 +64,67 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                <Setter Property="Background" Value="{DynamicResource SecundaryButtonHoverColor}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
             <Trigger Property="IsMouseCaptured" Value="True">
-                <Setter Property="Background" Value="{StaticResource SecundaryButtonHoverColor}"/>
+                <Setter Property="Background" Value="{DynamicResource SecundaryButtonHoverColor}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="#403f3f"/>
+                <Setter Property="Background" Value="{DynamicResource ThirdButtonColor}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="RadioButton" x:Key="ChartRangeButtonStyle">
+        <Setter Property="Foreground" Value="{DynamicResource SecundaryButtonTextColor}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="border"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Padding="4"
+                            SnapsToDevicePixels="true"
+                            CornerRadius="4">
+
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False"
+                                          HorizontalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ActiveColor}"/>
+                        </Trigger>
+
+                        <MultiTrigger>
+
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="true"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SecundaryButtonColor}"/>
+
+                        </MultiTrigger>
+
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource SecundaryButtonHoverColor}"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

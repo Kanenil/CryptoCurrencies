@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="CryptoCurrencies.WPF.Components.Chart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoCurrencies.WPF.Components" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
+             xmlns:converters="clr-namespace:CryptoCurrencies.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:DecimalToCurrencyConverter x:Key="DecimalToCurrencyConverter"/>
+        <converters:PercentageToTextConverter x:Key="PercentageToTextConverter"/>
+        <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
+        <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
+        <converters:SequenceNumberConverter x:Key="SequenceNumberConverter"/>
+        <converters:ImageToSourceConverter x:Key="ImageToSourceConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <local:Loader Panel.ZIndex="1"
+                      Grid.RowSpan="2"
+                      IsLoading="{Binding ChartLoader.IsLoading}"
+                      HasError="{Binding ChartLoader.HasError}"
+                      Description="{Binding ChartLoader.Description}"
+                      Title="{Binding ChartLoader.Title}"
+                      DismissError="{Binding LoadChartCommand}"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource PrimaryTextColor}">
+                        <Run Text="{Binding Coin.Name }" />
+                        Price Chart (<Run Text="{Binding Coin.Symbol, Converter={StaticResource ToUpperConverter}}" />)
+            </TextBlock>
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1"
+                        Margin="0 10 0 10">
+
+                <Image Source="{Binding Coin.Image, Converter={StaticResource ImageToSourceConverter}}"
+                       Style="{DynamicResource CurrencyImageStyle}"/>
+
+                <Label Content="{Binding Coin.Name}"
+                       Style="{DynamicResource LabelStyle}"
+                       VerticalAlignment="Center"
+                       FontSize="16"/>
+
+                <Label Content="{Binding Coin.Symbol, Converter={StaticResource ToUpperConverter}}"
+                       Style="{DynamicResource SymbolLabelStyle}"
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
+
+                <Label Content="to"
+                       Style="{DynamicResource LabelStyle}"
+                       FontSize="16"
+                       Margin="12, 0"
+                       VerticalAlignment="Center"/>
+
+                <Image Source="/Images/usd.png"
+                       Style="{DynamicResource CurrencyImageStyle}"/>
+
+                <Label Content="United States Dollar"
+                       Style="{DynamicResource LabelStyle}"
+                       VerticalAlignment="Center"
+                       FontSize="16"/>
+
+                <Label Content="USD"
+                       Style="{DynamicResource SymbolLabelStyle}"
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
+
+            </StackPanel>
+
+            <Border HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0 0 20 0"
+                    Style="{DynamicResource ChartRangeBorderStyle}">
+
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+
+                    <RadioButton Command="{Binding ChangeChartRangeCommand}"
+                                 CommandParameter="1d"
+                                 IsChecked="True"
+                                 Style="{DynamicResource ChartRangeButtonStyle}"
+                                 Content="1D"/>
+
+                    <RadioButton Command="{Binding ChangeChartRangeCommand}"
+                                 CommandParameter="7d"
+                                 Style="{DynamicResource ChartRangeButtonStyle}"
+                                 Content="7D"/>
+
+                    <RadioButton Command="{Binding ChangeChartRangeCommand}"
+                                 CommandParameter="1m"
+                                 Style="{DynamicResource ChartRangeButtonStyle}"
+                                 Content="1M"/>
+
+                    <RadioButton Command="{Binding ChangeChartRangeCommand}"
+                                 CommandParameter="3m"
+                                 Style="{DynamicResource ChartRangeButtonStyle}"
+                                 Content="3M"/>
+
+                    <RadioButton Command="{Binding ChangeChartRangeCommand}"
+                                 CommandParameter="1y"
+                                 Style="{DynamicResource ChartRangeButtonStyle}"
+                                 Content="1Y"/>
+
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <ScrollViewer Grid.Row="1"
+                      Margin="0 10 10 10">
+            <Border BorderThickness="0.5"
+                    BorderBrush="{DynamicResource SecundaryBackgroundColor}"
+                    Background="{DynamicResource SecundaryBackgroundColor}"
+                    CornerRadius="8"
+                    Height="390">
+                <lvc:CartesianChart  Series="{Binding Series}" 
+                                     XAxes="{Binding XAxes}"
+                                     TooltipFindingStrategy="CompareAll"
+                                     TooltipPosition="Top"
+                                     ZoomMode="X"
+                                     ZoomingSpeed="0.25"
+                                     AnimationsSpeed="00:00:00.2500000"/>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

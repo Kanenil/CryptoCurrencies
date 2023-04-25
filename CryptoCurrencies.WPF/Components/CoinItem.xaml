@@ -15,7 +15,8 @@
         <converters:PercentageToBrushConverter x:Key="PercentageToBrushConverter"/>
         <converters:DecimalToFullCurrencyConverter x:Key="DecimalToFullCurrencyConverter"/>
     </UserControl.Resources>
-    <Grid Cursor="Hand">
+    <Grid Cursor="Hand"
+          Style="{DynamicResource TableItemStyle}">
         <Behaviors:Interaction.Triggers>
             <Behaviors:EventTrigger EventName="PreviewMouseUp">
                 <Behaviors:InvokeCommandAction Command="{Binding DataContext.NavigateToDetailsCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
@@ -23,18 +24,6 @@
             </Behaviors:EventTrigger>
         </Behaviors:Interaction.Triggers>
 
-        <Grid.Style>
-            <Style TargetType="{x:Type Grid}">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Trigger.Setters>
-                            <Setter Property="Background" Value="#5c5454"/>
-                        </Trigger.Setters>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Style>
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
@@ -49,7 +38,7 @@
                    FontWeight="Medium"
                    HorizontalAlignment="Left"
                    Text="{Binding MarketCapRank}" 
-                   Foreground="#b3b9c5"/>
+                   Foreground="{DynamicResource SecundaryTextColor}"/>
 
         <WrapPanel Grid.Column="1" 
                    VerticalAlignment="Center">
@@ -61,12 +50,12 @@
                        FontSize="13.5" 
                        FontWeight="SemiBold"
                        Text="{Binding Name}" 
-                       Foreground="#FFFFFF"/>
+                       Foreground="{DynamicResource PrimaryTextColor}"/>
             <TextBlock Margin="0 0 0 0.25"
                        FontSize="13.5"
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
-                       Foreground="#b3b9c5"
+                       Foreground="{DynamicResource SecundaryTextColor}"
                        Text="{Binding Symbol, Converter={StaticResource ToUpperConverter}}" />
         </WrapPanel>
 
@@ -75,13 +64,9 @@
                    FontSize="13.25"
                    FontWeight="SemiBold"
                    HorizontalAlignment="Right"
-                   Foreground="#FFFFFF">
-            <TextBlock.Text>
-                <MultiBinding Converter="{StaticResource DecimalToCurrencyConverter}">
-                    <Binding Path="CurrentPrice"/>
-                    <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
-                </MultiBinding>
-            </TextBlock.Text>
+                   Foreground="{DynamicResource PrimaryTextColor}"
+                   Text="{Binding CurrentPrice, Converter={StaticResource DecimalToCurrencyConverter}}">
+            
         </TextBlock>
 
         <TextBlock Grid.Column="3"
@@ -105,13 +90,9 @@
                    FontSize="13.5"
                    FontWeight="Medium"
                    HorizontalAlignment="Right"
-                   Foreground="#FFFFFF">
-            <TextBlock.Text>
-                <MultiBinding Converter="{StaticResource DecimalToFullCurrencyConverter}">
-                    <Binding Path="MarketCap"/>
-                    <Binding Path="DataContext.Culture" RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type ItemsControl}}"/>
-                </MultiBinding>
-            </TextBlock.Text>
+                   Foreground="{DynamicResource PrimaryTextColor}"
+                   Text="{Binding MarketCap, Converter={StaticResource DecimalToFullCurrencyConverter}}">
+            
         </TextBlock>
     </Grid>
 </UserControl>

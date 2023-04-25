@@ -20,6 +20,10 @@ using LiveChartsCore.SkiaSharpView.WPF;
 using System.Diagnostics;
 using System.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Controls;
+using CryptoCurrencies.WPF.Core;
 
 namespace CryptoCurrencies.WPF.ViewModels
 {
@@ -34,51 +38,32 @@ namespace CryptoCurrencies.WPF.ViewModels
             _coinsService = coinsService;
 
             LoadCoinCommand = new AsyncRelayCommand(LoadCoinAsync);
-            DismissErrorCommand = new AsyncRelayCommand(LoadCoinAsync);
             LoadChartCommand = new AsyncRelayCommand(LoadChartAsync);
-            DismissChartErrorCommand = new AsyncRelayCommand(LoadChartAsync);
             LoadMarketsCommand = new AsyncRelayCommand(LoadMarketsAsync);
-            DismissMarketsErrorCommand = new AsyncRelayCommand(LoadMarketsAsync);
         }
 
-        [ObservableProperty]
-        private string _culture = "en-US";
+        private Dictionary<string, int> _rangesDictionary = new Dictionary<string, int>()
+        {
+            { "1d", 1 },
+            { "7d", 7 },
+            { "1m", 30 },
+            { "3m", 90 },
+            { "1y", 365 }
+        };
+
+        private ObservableCollection<FinancialPoint> _financialPoints = new();
 
         [ObservableProperty]
-        private bool _isLoading;
+        private Loader _chartLoader = new();
 
         [ObservableProperty]
-        private bool _hasError;
+        private Loader _coinLoader = new();
 
         [ObservableProperty]
-        private string _title;
+        private Loader _marketsLoader = new();
 
         [ObservableProperty]
-        private string _description;
-
-        [ObservableProperty]
-        private bool _isLoadingChart;
-
-        [ObservableProperty]
-        private bool _hasErrorChart;
-
-        [ObservableProperty]
-        private string _titleChart;
-
-        [ObservableProperty]
-        private string _descriptionChart;
-
-        [ObservableProperty]
-        private bool _isLoadingMarkets;
-
-        [ObservableProperty]
-        private bool _hasErrorMarkets;
-
-        [ObservableProperty]
-        private string _titleMarkets;
-
-        [ObservableProperty]
-        private string _descriptionMarkets;
+        private string _days = "1d";
 
         [ObservableProperty]
         private DetailCoin _coin = new();
@@ -86,172 +71,168 @@ namespace CryptoCurrencies.WPF.ViewModels
         [ObservableProperty]
         private ObservableCollection<TickerInfo> _markets;
 
-        public Axis[] XAxes { get; set; } =
-        {
-            new Axis
-            {
-                LabelsRotation = 90,
-                TextBrush = new SolidColorPaint(SkiaSharp.SKColor.Parse("#b3b9c5")),
-                Labeler = value => value > 0? new DateTime((long)value).ToString("t"):"",
-                UnitWidth = TimeSpan.FromMinutes(4).Ticks,
-            }
-        };
-
-        public Axis[] YAxes { get; set; } =
-        {
-            new Axis
-            {
-                TextBrush = new SolidColorPaint(SkiaSharp.SKColor.Parse("#b3b9c5")),
-                Labeler = (price) =>
-                {
-                    int precision;
-                    if (price >= 1 || price < 0) precision = 2;
-                    else if (price > 0.099) precision = 4;
-                    else precision = (int)Math.Log10((double)(1 / price)) * 2;
-                    return string.Format(new CultureInfo("en-US"), "{0:C" + precision + "}", price);
-                }
-            }
-        };
+        [ObservableProperty]
+        public Axis[] _xAxes;
 
         [ObservableProperty]
-        private ISeries[] _series = new ISeries[]
-            {
-                new CandlesticksSeries<FinancialPoint>
-                {
-                    Values = new ObservableCollection<FinancialPoint>()
-                    {
-                        new(new DateTime(2021, 1, 1), 523, 500, 450, 400),
-                    },
-                    TooltipLabelFormatter = (val) =>
-                    {
-                        var price = (double)val.PrimaryValue;
-
-                        int precision;
-                        if (price >= 1 || price < 0) precision = 2;
-                        else if (price > 0.099) precision = 4;
-                        else precision = (int)Math.Log10((double)(1 / price)) * 2;
-                        return string.Format(new CultureInfo("en-US"), val.Model.Date.ToString("dd/MM/yyyy H:mm:ss")+" {0:C" + precision + "}", price);
-                    }
-                }
-            };
+        private ISeries[] _series;
 
         public IAsyncRelayCommand LoadCoinCommand { get; }
-        public IAsyncRelayCommand DismissErrorCommand { get; }
         private async Task LoadCoinAsync()
         {
-            IsLoading = true;
-            HasError = false;
+            CoinLoader.IsLoading = true;
+            CoinLoader.HasError = false;
 
             try
             {
-                Title = "Loading Data";
-                Description = "Please wait, we are loading coin data";
-
-                Culture = _coinStore.Culture;
+                CoinLoader.Title = "Loading Data";
+                CoinLoader.Description = "Please wait, we are loading coin data";
 
                 var resp = await _coinsService.GetCoinMarkets("usd", 1, new string[] { _coinStore.SelectedCoin });
 
                 Coin = resp.FirstOrDefault();
 
-                IsLoading = false;
+                CoinLoader.IsLoading = false;
             }
             catch (Exception)
             {
-                Title = "Too many requests";
-                Description = "Please wait for the API to be available again";
+                CoinLoader.Title = "Too many requests";
+                CoinLoader.Description = "Please wait for the API to be available again";
 
-                HasError = true;
+                CoinLoader.HasError = true;
             }
         }
         public IAsyncRelayCommand LoadChartCommand { get; }
-        public IAsyncRelayCommand DismissChartErrorCommand { get; }
         private async Task LoadChartAsync()
         {
-            IsLoadingChart = true;
-            HasErrorChart = false;
+            ChartLoader.IsLoading = true;
+            ChartLoader.HasError = false;
+
+            int daysRange = _rangesDictionary[Days];
 
             try
             {
-                TitleChart = "Loading Chart";
-                DescriptionChart = "Please wait, we are loading information";
+                ChartLoader.Title = "Loading Chart";
+                ChartLoader.Description = "Please wait, we are loading information";
 
-                var resp = await _coinsService.GetMarketChartsByCoinId(_coinStore.SelectedCoin, "usd", "1");
+                var resp = await _coinsService.GetOhlcByCoinId(_coinStore.SelectedCoin, "usd", daysRange.ToString());
 
-                var values = new ObservableCollection<FinancialPoint>();
+                double[][] ohlcArray = JsonSerializer.Deserialize<double[][]>(resp.ToString());
 
-                for (var i = 0; i < resp.Prices.Length; i++)
+                if (ohlcArray != null)
                 {
-                    var timestamp = DateTimeOffset.FromUnixTimeMilliseconds((long)resp.Prices[i][0]);
-
-                    FinancialPoint candleStickPoint;
-
-                    if (i + 1 < resp.Prices.Length)
-                    {
-                        candleStickPoint = new FinancialPoint()
-                        {
-                            Date = timestamp.DateTime,
-                            Open = (double)resp.Prices[i][1],
-                            Close = (double)resp.Prices[i + 1][1],
-                            High = resp.Prices[i + 1][1] > resp.Prices[i][1] ? (double)resp.Prices[i + 1][1] : (double)resp.Prices[i][1],
-                            Low = resp.Prices[i + 1][1] < resp.Prices[i][1] ? (double)resp.Prices[i + 1][1] : (double)resp.Prices[i][1]
-                        };
-                    }
-                    else
-                    {
-                        candleStickPoint = new()
-                        {
-                            Date = timestamp.DateTime,
-                            Open = (double)resp.Prices[i][1],
-                            Close = (double)resp.Prices[i][1],
-                            High = (double)resp.Prices[i][1],
-                            Low = (double)resp.Prices[i][1]
-                        };
-
-                    }
-
-                    values.Add(candleStickPoint);
+                    _financialPoints.Clear();
+                    ConvertToFinancialPoint(ohlcArray).ForEach(x=>_financialPoints.Add(x));
                 }
 
-                Series[0].Values = values;
-                Series[0].RestartAnimations();
-
-                await Task.Delay(500);
-
-                IsLoadingChart = false;
+                ChartLoader.IsLoading = false;
             }
             catch (Exception)
             {
-                TitleChart = "Too many requests";
-                DescriptionChart = "Please wait for the API to be available again";
+                ChartLoader.Title = "Too many requests";
+                ChartLoader.Description = "Please wait for the API to be available again";
 
-                HasErrorChart = true;
+                ChartLoader.HasError = true;
+            }
+            finally
+            {
+                if (!ChartLoader.HasError)
+                {
+                    long unitWidth = 0;
+                    Func<double, string> labeler = new Func<double, string>(value => string.Empty);
+
+                    if (daysRange <= 2)
+                    {
+                        unitWidth = TimeSpan.FromMinutes(30).Ticks;
+                        labeler = value => new DateTime((long)value).ToString("HH:mm");
+                    }
+                    else if (daysRange > 2 && daysRange <= 30)
+                    {
+                        unitWidth = TimeSpan.FromHours(4).Ticks;
+                        labeler = value => new DateTime((long)value).ToString($"HH:mm{Environment.NewLine}dd/MM");
+                    }
+                    else if (daysRange > 30)
+                    {
+                        unitWidth = TimeSpan.FromDays(4).Ticks;
+                        labeler = value => new DateTime((long)value).ToString($"dd/MM{Environment.NewLine}yyyy");
+                    }
+
+                    XAxes = new Axis[1]
+                    {
+                        new Axis
+                        {
+                            LabelsRotation = 0,
+                            UnitWidth = unitWidth,
+                            Labeler = labeler,
+                            MinLimit = null,
+                            MaxLimit = null
+                        }
+                    };
+
+                    Series = new ISeries[1]
+                    {
+                        new CandlesticksSeries<FinancialPoint>
+                        {
+                            MaxBarWidth = SystemParameters.WorkArea.Width / 15,
+                            Values = _financialPoints,
+                            TooltipLabelFormatter = (ChartPoint) =>
+                                                    $"Date: {ChartPoint.Model.Date.ToString("dd/MM/yyyy  HH:mm")}{Environment.NewLine}" +
+                                                    $"High: {ChartPoint.Model.High}${Environment.NewLine}" +
+                                                    $"Open: {ChartPoint.Model.Open}${Environment.NewLine}" +
+                                                    $"Close: {ChartPoint.Model.Close}${Environment.NewLine}" +
+                                                    $"Low: {ChartPoint.Model.Low}$"
+                        }
+                    };
+
+                }
+
             }
         }
+
+        private List<FinancialPoint> ConvertToFinancialPoint(double[][] marketChartById)
+        {
+            List<FinancialPoint> financialPoints = new List<FinancialPoint>();
+            foreach (var c in marketChartById)
+            {
+                if (c != null)
+                {
+                    var point = new FinancialPoint();
+
+                    point.Date = DateTimeOffset.FromUnixTimeMilliseconds((long)c[0]).UtcDateTime;
+                    point.Open = c[1];
+                    point.High = c[2];
+                    point.Low = c[3];
+                    point.Close = c[4];
+
+                    financialPoints.Add(point);
+                }
+            }
+            return financialPoints;
+        }
         public IAsyncRelayCommand LoadMarketsCommand { get; }
-        public IAsyncRelayCommand DismissMarketsErrorCommand { get; }
         private async Task LoadMarketsAsync()
         {
-            IsLoadingMarkets = true;
-            HasErrorMarkets = false;
+            MarketsLoader.IsLoading = true;
+            MarketsLoader.HasError = false;
 
             try
             {
-                TitleMarkets = "Loading Markets";
-                DescriptionMarkets = "Please wait, we are loading information";
+                MarketsLoader.Title = "Loading Markets";
+                MarketsLoader.Description = "Please wait, we are loading information";
 
                 var resp = await _coinsService.GetTickerByCoinId(_coinStore.SelectedCoin, 1);
 
 
                 Markets = new(resp.Tickers.Take(5));
 
-                IsLoadingMarkets = false;
+                MarketsLoader.IsLoading = false;
             }
             catch (Exception)
             {
-                TitleMarkets = "Too many requests";
-                DescriptionMarkets = "Please wait for the API to be available again";
+                MarketsLoader.Title = "Too many requests";
+                MarketsLoader.Description = "Please wait for the API to be available again";
 
-                HasErrorMarkets = true;
+                MarketsLoader.HasError = true;
             }
         }
 
@@ -260,6 +241,17 @@ namespace CryptoCurrencies.WPF.ViewModels
         {
             Navigation.NavigateTo<HomeViewModel>();
         }
+
+        [RelayCommand]
+        private void ChangeChartRange(string? day)
+        {
+            if (Days == day)
+                return;
+
+            Days = day ?? "1d";
+            Task.Run(LoadChartAsync);
+        }
+
         [RelayCommand]
         private void OpenUrl(string? url)
         {
