@@ -31,9 +31,9 @@ namespace CryptoCurrencies.CoinGecko.Models
         public long MarketCapRank { get; set; }
 
         [JsonPropertyName("price_change_percentage_24h_in_currency")]
-        public decimal PriceChangePercentage24HInCurrency { get; set; }
+        public decimal? PriceChangePercentage24HInCurrency { get; set; }
 
         [JsonPropertyName("price_change_percentage_7d_in_currency")]
-        public decimal PriceChangePercentage7DInCurrency { get; set; }
+        public decimal? PriceChangePercentage7DInCurrency { get; set; }
     }
 }

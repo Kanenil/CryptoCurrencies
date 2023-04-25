@@ -20,8 +20,13 @@
             <DataTemplate DataType="{x:Type VM:HomeViewModel}">
                 <views:HomeView />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type VM:DetailViewModel}">
                 <views:DetailView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type VM:ConvertViewModel}">
+                <views:ConvertView />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

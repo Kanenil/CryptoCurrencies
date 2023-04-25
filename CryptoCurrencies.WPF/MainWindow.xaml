@@ -17,6 +17,38 @@
         </Grid.RowDefinitions>
 
         <Grid MaxWidth="900">
+
+            <Grid HorizontalAlignment="Left"
+                  Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Style="{DynamicResource PrimaryButtonStyle}" 
+                    Padding="20 6"
+                    Margin="0 0 10 0"
+                    Command="{Binding NavigateToHomeCommand}">
+                    <WrapPanel>
+                        <TextBlock Text="Home"/>
+                        <fa:FontAwesome Icon="Home" 
+                                        VerticalAlignment="Center"
+                                        Margin="10 0 0 0"/>
+                    </WrapPanel>
+                </Button>
+                
+                <Button Style="{DynamicResource PrimaryButtonStyle}" 
+                    Padding="20 6"
+                        Grid.Column="1"
+                    Command="{Binding NavigateToConvertCommand}">
+                    <WrapPanel>
+                        <TextBlock Text="Convert"/>
+                        <fa:FontAwesome Icon="Exchange" VerticalAlignment="Center"
+                                    Margin="10 0 0 0"/>
+                    </WrapPanel>
+                </Button>
+            </Grid>
+
             <Button Style="{DynamicResource PrimaryButtonStyle}" 
                     Click="SwitchTheme"
                     Padding="20 6"

@@ -19,5 +19,19 @@ namespace CryptoCurrencies.WPF.ViewModels
         {
             Navigation.NavigateTo<HomeViewModel>();
         }
+
+        [RelayCommand]
+        private void NavigateToConvert()
+        {
+            if(Navigation.CurrentView.GetType() != typeof(ConvertViewModel))
+                Navigation.NavigateTo<ConvertViewModel>();
+        }
+
+        [RelayCommand]
+        private void NavigateToHome()
+        {
+            if (Navigation.CurrentView.GetType() != typeof(HomeViewModel))
+                Navigation.NavigateTo<HomeViewModel>();
+        }
     }
 }

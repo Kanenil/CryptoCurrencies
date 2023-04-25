@@ -12,14 +12,14 @@ namespace CryptoCurrencies.CoinGecko.Services
 {
     public class CoinsService : ApiSender, ICoinsService
     {
-        public async Task<List<MainCoin>> GetCoinMarkets(string vsCurrency, int page)
+        public async Task<List<MainCoin>> GetCoinMarkets(string vsCurrency, int page,int countOnPage)
         {
             return await GetAsync<List<MainCoin>>(QueryStringService.AppendQueryString(CoinsEndPoints.CoinMarkets,
                 new Dictionary<string, object>
                 {
                     { "vs_currency", vsCurrency },
                     { "order", "market_cap_desc" },
-                    { "per_page", 10 },
+                    { "per_page", countOnPage },
                     { "page", page },
                     { "sparkline", true },
                     { "locale", "en" },

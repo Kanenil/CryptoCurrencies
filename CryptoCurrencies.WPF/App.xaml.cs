@@ -40,6 +40,7 @@ namespace CryptoCurrencies.WPF
             services.AddSingleton<MainViewModel>();
             services.AddTransient<HomeViewModel>();
             services.AddTransient<DetailViewModel>();
+            services.AddTransient<ConvertViewModel>();
 
             services.AddSingleton<Func<Type, BaseViewModel>>(s => viewModelType => (BaseViewModel)s.GetRequiredService(viewModelType));
 

@@ -55,7 +55,7 @@ namespace CryptoCurrencies.WPF.ViewModels
                 CoinsLoader.Description = "Please wait, we are loading coin data";
 
                 if(string.IsNullOrWhiteSpace(Search))
-                    Coins = new(await _coinsService.GetCoinMarkets("usd", Page));
+                    Coins = new(await _coinsService.GetCoinMarkets("usd", Page, 10));
                 else
                     Coins = new(await _coinsService.GetCoinsBySearch("usd", Page, Search));
 

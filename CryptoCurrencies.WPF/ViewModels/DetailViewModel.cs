@@ -222,7 +222,6 @@ namespace CryptoCurrencies.WPF.ViewModels
 
                 var resp = await _coinsService.GetTickerByCoinId(_coinStore.SelectedCoin, 1);
 
-
                 Markets = new(resp.Tickers.Take(5));
 
                 MarketsLoader.IsLoading = false;

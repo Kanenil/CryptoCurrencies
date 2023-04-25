@@ -12,7 +12,7 @@ namespace CryptoCurrencies.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return "";
+            if (value == null) return "#16c784";
 
             return (decimal)value >= 0 ? "#16c784" : "#ea3943";
         }
